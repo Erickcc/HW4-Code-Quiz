@@ -1,4 +1,3 @@
-// ∞
 var startButton = document.querySelector("#start-button");
 var timerElement = document.querySelector("#timer-count");
 var quizTitle = document.querySelector("#quiz-title");
@@ -9,6 +8,7 @@ var answer2 = document.querySelector("#answer2");
 var answer3 = document.querySelector("#answer3");
 var answer4 = document.querySelector("#answer4");
 var button = document.querySelectorAll(".button");
+var quizResult = document.querySelector(".quiz-result");
 
 var question1 = new Object();
 question1.question = "Which of the following options is NOT a primitive type";
@@ -67,33 +67,60 @@ var currentObject;
 var amountofQuestions = 6;
 var clickedID;
 var currentAnswer;
+var resultTimer;
+var showResult;
 
 function timerConditions (){
   timerCount--;
+  if (timerCount < 0){
+    timerCount = 0;
+  }
   timerElement.textContent = "Time: " + timerCount;
+
+  if (showResult === true){
+    resultTimer++;
+    if(resultTimer >= 2){
+      showResult = false;
+      resultTimer = 0;
+      quizResult.textContent="";
+    }
+  }
+
   if(isOver || timerCount<=0){
     clearInterval(timer);
+    displayScore();
   }
+}
+
+function displayScore(){
+  quizTitle.textContent = "All done";
+  quizContent.textContent ="Your final score is " + timerCount;
+  quizAnswers.setAttribute("style", "display: none");
 }
 
 function startTimer (){
   timer = setInterval (timerConditions,1000);
 }
 
+function displayCorrect(){
+  quizResult.textContent="Correct!";
+}
+
+function displayIncorrect(){
+  quizResult.textContent="Incorrect!";
+ }
+
+
 function renderQuestions(event){
   var chosenAnswer;
-  
   if (clickedID == ""){
     clickedID = "0";
   }else{
     clickedID=event.target.id;
     console.log(event.target.id);
   }
-  
-  
+
   if(timerCount<60 && clickedID != null && clickedID != "quiz-answers"){
-    // console.log(event.target.id);
-    
     chosenAnswer = clickedID.match(/(\d+)/);
     correctAnswer = eval(currentObject)['correctAnswer'];
     console.log(chosenAnswer[0]);
@@ -101,17 +128,21 @@ function renderQuestions(event){
 
     if (correctAnswer == chosenAnswer[0])
     {
-      console.log("Correct");
+      showResult = true;
+      displayCorrect();
     }else{
+      showResult = true;
       timerCount = timerCount - 10;
+      displayIncorrect();
     }
   }
 
   if(currentQuestion < amountofQuestions && clickedID != "quiz-answers" && clickedID != "0"){
     currentQuestion++;
     console.log("entered");
-  }else if(currentQuestion >= amountofQuestions || timerCount < 0){
+  }else if(currentQuestion >= amountofQuestions || timerCount <= 0){
     isOver=true;
+
   }
 
   currentObject = "question" + currentQuestion;
@@ -120,13 +151,6 @@ function renderQuestions(event){
     currentAnswer = "answer" + i;
     eval(currentAnswer).textContent = eval(currentObject)[currentAnswer];
   }
-
-
-  // console.log(clickedID);
-  // console.log(currentQuestion);
-  // console.log(correctAnswer);
-  // console.log(eval(currentObject)['correctAnswer']);
-  // console.log(correctAnswer[0]);  
 }
 
 function startQuiz() {
@@ -143,6 +167,8 @@ function startQuiz() {
   clickedID = "";
   currentObject = "question" + currentQuestion;
   currentAnswer = "answer1";
+  resultTimer = 0;
+  showResult = false;
 
   startTimer();
   renderQuestions();

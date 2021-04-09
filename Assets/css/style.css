@@ -96,3 +96,7 @@ header ul{
 #quiz-answers{
   list-style-type: none;
 }
+
+.quiz-result{
+  font-size: var(--small-font);
+}
