@@ -53,6 +53,7 @@ header ul{
 
 .quiz-content{
   text-align: center;
+  
 }
 
 .quiz-footer{
@@ -99,4 +100,8 @@ header ul{
 
 .quiz-result{
   font-size: var(--small-font);
+}
+
+form{
+  display: none;
 }

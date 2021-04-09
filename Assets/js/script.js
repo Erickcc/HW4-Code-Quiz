@@ -2,6 +2,7 @@ var startButton = document.querySelector("#start-button");
 var timerElement = document.querySelector("#timer-count");
 var quizTitle = document.querySelector("#quiz-title");
 var quizContent = document.querySelector("#quiz-content");
+var quizContentClass = document.querySelector(".quiz-content");
 var quizAnswers = document.querySelector("#quiz-answers");
 var answer1 = document.querySelector("#answer1");
 var answer2 = document.querySelector("#answer2");
@@ -9,6 +10,9 @@ var answer3 = document.querySelector("#answer3");
 var answer4 = document.querySelector("#answer4");
 var button = document.querySelectorAll(".button");
 var quizResult = document.querySelector(".quiz-result");
+var userInitials = document.querySelector("#user-initials");
+var submitButton = document.querySelector("#submit-button");
+var form = document.querySelector("form");
 
 var question1 = new Object();
 question1.question = "Which of the following options is NOT a primitive type";
@@ -96,6 +100,15 @@ function displayScore(){
   quizTitle.textContent = "All done";
   quizContent.textContent ="Your final score is " + timerCount;
   quizAnswers.setAttribute("style", "display: none");
+  quizContentClass.setAttribute("style", "display: block");
+  form.setAttribute("style", "display: inline-block");
+  
+}
+
+function storeScore(event){
+  event.preventDefault();
+  console.log(userInitials.value);
+  console.log(timerCount);
 }
 
 function startTimer (){
@@ -117,14 +130,11 @@ function renderQuestions(event){
     clickedID = "0";
   }else{
     clickedID=event.target.id;
-    console.log(event.target.id);
   }
 
   if(timerCount<60 && clickedID != null && clickedID != "quiz-answers"){
     chosenAnswer = clickedID.match(/(\d+)/);
     correctAnswer = eval(currentObject)['correctAnswer'];
-    console.log(chosenAnswer[0]);
-    console.log(correctAnswer);
 
     if (correctAnswer == chosenAnswer[0])
     {
@@ -139,7 +149,6 @@ function renderQuestions(event){
 
   if(currentQuestion < amountofQuestions && clickedID != "quiz-answers" && clickedID != "0"){
     currentQuestion++;
-    console.log("entered");
   }else if(currentQuestion >= amountofQuestions || timerCount <= 0){
     isOver=true;
 
@@ -178,3 +187,5 @@ function startQuiz() {
 startButton.addEventListener("click", startQuiz);
 
 quizAnswers.addEventListener("click", renderQuestions)
+
+submitButton.addEventListener("click", storeScore);
